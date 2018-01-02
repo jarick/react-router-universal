@@ -1,0 +1,89 @@
+{
+  "name": "react-router-universal",
+  "version": "1.0.1",
+  "description": "React connector for universal-router",
+  "main": "lib/react-router-universal.js",
+  "module": "es/react-router-universal.js",
+  "files": [
+    "dist",
+    "lib",
+    "es",
+    "src"
+  ],
+  "scripts": {
+    "clean": "rimraf lib dist es coverage",
+    "flow": "flow check",
+    "lint": "eslint src test",
+    "pretest": "npm run build:commonjs",
+    "test": "npm run flow && npm run lint && npm run test:jest",
+    "test:jest": "cross-env BABEL_ENV=commonjs jest",
+    "test:watch": "npm run test:jest -- --watch",
+    "test:cov": "npm run test:jest -- --coverage",
+    "build:commonjs": "cross-env NODE_ENV=cjs rollup -c -o lib/react-router-universal.js",
+    "build:es": "cross-env BABEL_ENV=es NODE_ENV=es rollup -c -o es/react-router-universal.js",
+    "build:umd": "cross-env BABEL_ENV=es NODE_ENV=development rollup -c -o dist/react-router-universal.js",
+    "build:umd:min": "cross-env BABEL_ENV=es NODE_ENV=production rollup -c -o dist/react-router-universal.min.js",
+    "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
+    "prepare": "npm run clean && npm test && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jarick/react-router-universal.git"
+  },
+  "keywords": [
+    "router"
+  ],
+  "author": "jarick <zolotarev.jar@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jarick/react-router-universal/issues"
+  },
+  "homepage": "https://github.com/jarick/react-router-universal#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.3",
+    "babel-jest": "^21.2.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-syntax-flow": "^6.18.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "cross-env": "^5.1.1",
+    "eslint": "^4.12.1",
+    "eslint-config-react-app": "^2.0.1",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.5.1",
+    "flow-bin": "^0.60.1",
+    "jest": "^21.2.1",
+    "react": "^16.2.0",
+    "regenerator-runtime": "^0.11.0",
+    "rimraf": "^2.6.2",
+    "rollup": "^0.52.0",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-flow": "^1.1.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-uglify": "^2.0.1",
+    "universal-router": "^5.0.0"
+  },
+  "npmName": "react-router-universal",
+  "npmFileMap": [
+    {
+      "basePath": "/dist/",
+      "files": [
+        "*.js"
+      ]
+    }
+  ],
+  "jest": {
+    "testRegex": "(/test/.*\\.spec.js)$"
+  },
+  "dependencies": {
+    "prop-types": "^15.6.0",
+    "react-dom": "^16.2.0",
+    "recompose": "^0.26.0",
+    "url-search-params": "^0.10.0"
+  }
+}
