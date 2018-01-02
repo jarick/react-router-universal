@@ -1,7 +1,6 @@
 // @flow
 
 import { createElement } from 'react'
-import ReactDOMServer from 'react-dom/server';
 import UniversalRouter from 'universal-router'
 import generateUrls from 'universal-router/generateUrls'
 import Provider from './Provider'
@@ -22,13 +21,17 @@ export type Action = {
 
 export type RouterOptions = {
   routes: Router[],
+  renderToString: (element: any) => string,
   options?: Object,
   cache?: any,
   action?: Action
 }
 
 export default (props: RouterOptions) => {
-  const { routes, options = {}, action = { status: 200 }, cache } = props
+  const { renderToString, routes, options = {}, action = { status: 200 }, cache } = props
+  if (!renderToString) {
+    throw new Error('renderToString is not set')
+  }
   let urlWithQueryString
   const mapRoutes = routes.map(route => {
     const { useCache = false, cacheQueryParams = [] } = route
@@ -74,7 +77,7 @@ export default (props: RouterOptions) => {
             return urlWithQueryString(name, urlParams);
           }
         })
-        const result = ReactDOMServer.renderToString(element)
+        const result = renderToString(element)
 
         if (useCache && cache && action.status === 200) {
           cache.set(cacheKey, result)

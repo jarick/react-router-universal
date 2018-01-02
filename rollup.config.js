@@ -8,7 +8,7 @@ const env = process.env.NODE_ENV
 const config = {
   input: 'src/index.js',
   plugins: [flow()],
-  external: [ 'react', 'react-dom' ],
+  external: [ 'react', 'universal-router', 'universal-router/generateUrls', 'prop-types', 'recompose' ],
 }
 
 if (env === 'es' || env === 'cjs') {

@@ -1,5 +1,6 @@
 import { createElement } from 'react'
 import type { Node } from 'react'
+import ReactDOMServer from 'react-dom/server'
 import { withRouter, createRouter } from '../'
 
 const Cache = (cache = {}) => {
@@ -16,6 +17,10 @@ const Cache = (cache = {}) => {
 describe('router', () => {
 
   it('route without cache', (done) => {
+    const exceptResult = `<div data-reactroot="">
+Welcome, admin!
+/hello/admin?test=1
+</div>`
     const cache = Cache()
     const Hello = withRouter(({ context, matchParams, queryParams, setAction, url }): Node => {
       setAction(200)
@@ -40,14 +45,11 @@ ${url('hello', { username: context.params.username , test: '1'})}
     const action = {
       status: 202
     }
-    const router = createRouter({ routes, cache, action })
+    const { renderToString } = ReactDOMServer
+    const router = createRouter({ renderToString, routes, cache, action })
 
     router.resolve({ pathname: '/hello/admin', search: { test: '1' }, user: null })
       .then(result => {
-        const exceptResult = `<div data-reactroot="">
-Welcome, admin!
-/hello/admin?test=1
-</div>`
         expect(result).toEqual(exceptResult)
         expect(action).toEqual({ status: 200 })
         expect(cache.get('/hello/admin#{"test":"1"}#null')).toEqual(exceptResult)
