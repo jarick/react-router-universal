@@ -4,7 +4,6 @@ import { createElement } from 'react'
 import ReactDOMServer from 'react-dom/server';
 import UniversalRouter from 'universal-router'
 import generateUrls from 'universal-router/generateUrls'
-import URLSearchParams from 'url-search-params'
 import Provider from './Provider'
 
 
@@ -37,10 +36,12 @@ export default (props: RouterOptions) => {
       name: route.name,
       path: route.path,
       action: (context: Object, params: Object): string => {
-        const { pathname, search = '', user = null } = context
-        const searchParams = new URLSearchParams(search)
+        if (!route.component) {
+          throw new Error('Component is not set')
+        }
+        const { pathname, search = {}, user = null } = context
         const searchCacheParams = cacheQueryParams.reduce((result, key) => {
-          return { ...result, [key]: searchParams.get(key) }
+          return Object.assign(result, {}, { [key]: search[key] || null })
         }, {})
         const cacheKey = [
           pathname,
@@ -48,9 +49,6 @@ export default (props: RouterOptions) => {
           JSON.stringify(user),
         ].join('#')
 
-        if (!route.component) {
-          throw new Error('Component is not set')
-        }
         if (useCache && cache) {
           const saveValue = cache.get(cacheKey)
           if (saveValue) {
@@ -61,7 +59,7 @@ export default (props: RouterOptions) => {
         const element = createElement(Provider(route.component), {
           context,
           matchParams: params,
-          queryParams: searchParams,
+          queryParams: search,
           setAction(status: number, url?: string) {
             // eslint-disable-next-line
             (action: Action)

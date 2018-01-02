@@ -8,6 +8,7 @@ const env = process.env.NODE_ENV
 const config = {
   input: 'src/index.js',
   plugins: [flow()],
+  external: [ 'react', 'react-dom' ],
 }
 
 if (env === 'es' || env === 'cjs') {

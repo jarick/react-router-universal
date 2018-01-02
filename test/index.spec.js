@@ -20,7 +20,7 @@ describe('router', () => {
     const Hello = withRouter(({ context, matchParams, queryParams, setAction, url }): Node => {
       setAction(200)
       expect(matchParams.username).toEqual('admin')
-      expect(queryParams.get('test')).toEqual('1')
+      expect(queryParams['test']).toEqual('1')
 
       return createElement('div', {}, `
 Welcome, ${context.params.username}!
@@ -42,7 +42,7 @@ ${url('hello', { username: context.params.username , test: '1'})}
     }
     const router = createRouter({ routes, cache, action })
 
-    router.resolve({ pathname: '/hello/admin', search: 'test=1', user: null })
+    router.resolve({ pathname: '/hello/admin', search: { test: '1' }, user: null })
       .then(result => {
         const exceptResult = `<div data-reactroot="">
 Welcome, admin!
